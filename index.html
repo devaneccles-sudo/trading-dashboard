@@ -14,22 +14,19 @@
 
         body {
             font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-            background-color: #f9f9f7;
+            background: linear-gradient(135deg, #f5f5f3 0%, #e8e8e4 100%);
             color: #0b0b0b;
             padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
+            transition: all 0.3s;
         }
 
-        body[data-theme="dark"],
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: #0d0d0d;
-                color: #ffffff;
-            }
+        body[data-theme="dark"] {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            color: #ffffff;
         }
 
-        .dashboard {
-            max-width: 1400px;
+        .dashboard-container {
+            max-width: 1600px;
             margin: 0 auto;
         }
 
@@ -38,35 +35,50 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 16px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(11, 11, 11, 0.1);
         }
 
-        .header h1 {
-            font-size: 32px;
-            font-weight: 600;
+        body[data-theme="dark"] .header {
+            border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
-        .header-actions {
+        .header-left h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .header-left p {
+            font-size: 13px;
+            color: #777;
+            font-weight: 400;
+        }
+
+        body[data-theme="dark"] .header-left p {
+            color: #999;
+        }
+
+        .header-right {
             display: flex;
-            gap: 12px;
+            gap: 16px;
             align-items: center;
         }
 
         .sync-status {
-            font-size: 12px;
-            color: #52514e;
-            padding: 8px 12px;
-            background: rgba(11, 11, 11, 0.04);
-            border-radius: 6px;
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 8px 16px;
+            background: rgba(11, 11, 11, 0.06);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #52514e;
         }
 
         body[data-theme="dark"] .sync-status {
+            background: rgba(255, 255, 255, 0.06);
             color: #c3c2b7;
-            background: rgba(255, 255, 255, 0.05);
         }
 
         .sync-dot {
@@ -82,119 +94,143 @@
             50% { opacity: 0.5; }
         }
 
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 400px;
-            color: #52514e;
-        }
-
-        .loading::after {
-            content: "Loading dashboard data...";
-            animation: dots 1.5s infinite;
-        }
-
-        @keyframes dots {
-            0%, 20% { content: "Loading dashboard data."; }
-            40% { content: "Loading dashboard data.."; }
-            60%, 100% { content: "Loading dashboard data..."; }
-        }
-
         .theme-toggle {
-            background: none;
-            border: 1px solid #c3c2b7;
             padding: 8px 16px;
-            border-radius: 6px;
+            background: rgba(11, 11, 11, 0.1);
+            border: 1px solid rgba(11, 11, 11, 0.15);
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .theme-toggle:hover {
-            background: rgba(11, 11, 11, 0.05);
+            font-weight: 500;
+            transition: all 0.2s;
         }
 
         body[data-theme="dark"] .theme-toggle {
-            border-color: #383835;
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(11, 11, 11, 0.15);
         }
 
         body[data-theme="dark"] .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        .stats-grid {
+        .error-message {
+            display: none;
+            padding: 16px 20px;
+            background: #fee;
+            border-left: 4px solid #f44;
+            color: #c33;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        body[data-theme="dark"] .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff8888;
+            border-left-color: #ff6666;
+        }
+
+        .main-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 220px 1fr 280px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* LEFT SIDEBAR - STAT CARDS */
+        .sidebar-left {
+            display: flex;
+            flex-direction: column;
             gap: 16px;
-            margin-bottom: 30px;
         }
 
         .stat-card {
-            background: #fcfcfb;
-            border: 1px solid #e1e0d9;
-            border-radius: 8px;
-            padding: 20px;
+            background: white;
+            padding: 24px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             text-align: center;
             transition: all 0.3s;
         }
 
-        .stat-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
         body[data-theme="dark"] .stat-card {
-            background: #1a1a19;
-            border-color: #2c2c2a;
+            background: #1e1e1e;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
-        .stat-value {
-            font-size: 40px;
-            font-weight: 700;
-            margin: 10px 0;
-            color: #2a78d6;
-        }
-
-        body[data-theme="dark"] .stat-value {
-            color: #3987e5;
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         .stat-label {
-            font-size: 13px;
-            color: #52514e;
+            font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
+            color: #888;
             letter-spacing: 0.5px;
+            margin-bottom: 12px;
         }
 
         body[data-theme="dark"] .stat-label {
-            color: #c3c2b7;
+            color: #999;
         }
 
-        .charts-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0066cc;
+            line-height: 1;
+        }
+
+        body[data-theme="dark"] .stat-value {
+            color: #4da6ff;
+        }
+
+        .stat-unit {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        body[data-theme="dark"] .stat-unit {
+            color: #999;
+        }
+
+        /* CENTER SECTION - CHARTS */
+        .center-section {
+            display: flex;
+            flex-direction: column;
             gap: 20px;
-            margin-bottom: 30px;
         }
 
         .chart-container {
-            background: #fcfcfb;
-            border: 1px solid #e1e0d9;
-            border-radius: 8px;
-            padding: 20px;
-            position: relative;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         body[data-theme="dark"] .chart-container {
-            background: #1a1a19;
-            border-color: #2c2c2a;
+            background: #1e1e1e;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
         .chart-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             color: #0b0b0b;
         }
 
@@ -204,750 +240,633 @@
 
         .chart-wrapper {
             position: relative;
-            height: 350px;
+            height: 280px;
         }
 
-        canvas {
-            max-height: 350px !important;
+        .charts-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        .full-width {
-            grid-column: 1 / -1;
+        @media (max-width: 900px) {
+            .charts-row {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .data-table {
-            background: #fcfcfb;
-            border: 1px solid #e1e0d9;
-            border-radius: 8px;
-            padding: 20px;
-            overflow-x: auto;
-            margin-top: 30px;
+        .table-container {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
-        body[data-theme="dark"] .data-table {
-            background: #1a1a19;
-            border-color: #2c2c2a;
+        body[data-theme="dark"] .table-container {
+            background: #1e1e1e;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
         }
 
-        .data-table h3 {
+        .table-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             color: #0b0b0b;
         }
 
-        body[data-theme="dark"] .data-table h3 {
+        body[data-theme="dark"] .table-title {
             color: #ffffff;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-
-        th {
-            background: rgba(11, 11, 11, 0.04);
-            padding: 12px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #52514e;
-            border-bottom: 1px solid #e1e0d9;
-        }
-
-        body[data-theme="dark"] th {
-            background: rgba(255, 255, 255, 0.05);
-            color: #c3c2b7;
-            border-bottom-color: #2c2c2a;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e1e0d9;
             font-size: 13px;
         }
 
-        body[data-theme="dark"] td {
-            border-bottom-color: #2c2c2a;
+        thead th {
+            background: rgba(11, 11, 11, 0.04);
+            padding: 12px 8px;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid rgba(11, 11, 11, 0.1);
         }
 
-        tr:hover td {
+        body[data-theme="dark"] thead th {
+            background: rgba(255, 255, 255, 0.04);
+            color: #aaa;
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        tbody td {
+            padding: 12px 8px;
+            border-bottom: 1px solid rgba(11, 11, 11, 0.06);
+            color: #333;
+        }
+
+        body[data-theme="dark"] tbody td {
+            border-bottom-color: rgba(255, 255, 255, 0.06);
+            color: #ddd;
+        }
+
+        tbody tr:hover {
             background: rgba(11, 11, 11, 0.02);
         }
 
-        body[data-theme="dark"] tr:hover td {
+        body[data-theme="dark"] tbody tr:hover {
             background: rgba(255, 255, 255, 0.02);
         }
 
-        .color-legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e1e0d9;
-        }
-
-        body[data-theme="dark"] .color-legend {
-            border-top-color: #2c2c2a;
-        }
-
-        .legend-item {
+        /* RIGHT SIDEBAR */
+        .sidebar-right {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        body[data-theme="dark"] .summary-card {
+            background: #1e1e1e;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #0b0b0b;
+        }
+
+        body[data-theme="dark"] .summary-title {
+            color: #ffffff;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(11, 11, 11, 0.06);
             font-size: 12px;
         }
 
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
-            flex-shrink: 0;
+        body[data-theme="dark"] .summary-row {
+            border-bottom-color: rgba(255, 255, 255, 0.06);
         }
 
-        .last-updated {
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #777;
+            font-weight: 500;
+        }
+
+        body[data-theme="dark"] .summary-label {
+            color: #999;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: #0b0b0b;
+        }
+
+        body[data-theme="dark"] .summary-value {
+            color: #fff;
+        }
+
+        .loading {
             text-align: center;
+            padding: 60px 20px;
             color: #52514e;
-            font-size: 12px;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e1e0d9;
         }
 
-        body[data-theme="dark"] .last-updated {
+        body[data-theme="dark"] .loading {
             color: #c3c2b7;
-            border-top-color: #2c2c2a;
-        }
-
-        .error-message {
-            background: #fff5f5;
-            border: 1px solid #e34948;
-            color: #d03b3b;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        body[data-theme="dark"] .error-message {
-            background: rgba(230, 73, 72, 0.1);
-            border-color: #e66767;
-            color: #e66767;
-        }
-
-        @media (max-width: 768px) {
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .full-width {
-                grid-column: 1;
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .header-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
         }
     </style>
 </head>
 <body data-theme="light">
-    <div class="dashboard">
-        <div class="header">
-            <div>
-                <h1>Trading Dashboard</h1>
-                <p style="color: #52514e; margin-top: 4px;">Shannon Technical Services - Live Data</p>
+<div class="dashboard-container">
+    <div class="header">
+        <div class="header-left">
+            <h1>Trading Dashboard</h1>
+            <p>Shannon Technical Services - Live Data</p>
+        </div>
+        <div class="header-right">
+            <div class="sync-status">
+                <span class="sync-dot"></span>
+                <span id="syncStatus">Syncing...</span>
             </div>
-            <div class="header-actions">
-                <div class="sync-status">
-                    <span class="sync-dot"></span>
-                    <span id="syncStatus">Syncing...</span>
-                </div>
-                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+        </div>
+    </div>
+
+    <div id="errorMessage" class="error-message"></div>
+
+    <div id="content" class="main-layout">
+        <!-- LEFT SIDEBAR -->
+        <div class="sidebar-left">
+            <div class="stat-card">
+                <div class="stat-label">Total Trades</div>
+                <div class="stat-value" id="totalTrades">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unique Lessors</div>
+                <div class="stat-value" id="uniqueLessors">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Aircraft Age</div>
+                <div class="stat-value" id="avgAge">-</div>
+                <div class="stat-unit">years</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Active Projects</div>
+                <div class="stat-value" id="activeProjects">-</div>
             </div>
         </div>
 
-        <div class="error-message" id="errorMessage"></div>
+        <!-- CENTER SECTION -->
+        <div class="center-section">
+            <div class="charts-row">
+                <div class="chart-container">
+                    <div class="chart-title">Aircraft Type Distribution</div>
+                    <div class="chart-wrapper">
+                        <canvas id="aircraftTypeChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Engine Type Distribution</div>
+                    <div class="chart-wrapper">
+                        <canvas id="engineTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
 
-        <div id="content" class="loading"></div>
+            <div class="table-container">
+                <div class="table-title">Lessor Rankings</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>STS Lessor</th>
+                            <th># of Trades</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lessorTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR -->
+        <div class="sidebar-right">
+            <div class="table-container">
+                <div class="table-title">Counter Party Rankings</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Opposite Lessor</th>
+                            <th># Trades</th>
+                        </tr>
+                    </thead>
+                    <tbody id="counterPartyTable"></tbody>
+                </table>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-title">Aircraft Age & Engine Summary</div>
+                <div class="summary-row">
+                    <span class="summary-label">Average Age</span>
+                    <span class="summary-value" id="summaryAvgAge">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Median Age</span>
+                    <span class="summary-value" id="summaryMedianAge">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Youngest</span>
+                    <span class="summary-value" id="summaryMinAge">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Oldest</span>
+                    <span class="summary-value" id="summaryMaxAge">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Top Engine</span>
+                    <span class="summary-value" id="summaryTopEngine">-</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Top Aircraft</span>
+                    <span class="summary-value" id="summaryTopAircraft">-</span>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script>
-        // Color palette
-        const colors = {
-            light: {
-                series1: '#2a78d6',
-                series2: '#eb6834',
-                series3: '#1baf7a',
-                series4: '#eda100',
-                series5: '#e87ba4',
-                series6: '#008300',
-                series7: '#4a3aa7',
-                series8: '#e34948',
-                text: '#0b0b0b',
-                textSecondary: '#52514e',
-                surface: '#fcfcfb',
-                border: '#e1e0d9'
-            },
-            dark: {
-                series1: '#3987e5',
-                series2: '#d95926',
-                series3: '#199e70',
-                series4: '#c98500',
-                series5: '#d55181',
-                series6: '#008300',
-                series7: '#9085e9',
-                series8: '#e66767',
-                text: '#ffffff',
-                textSecondary: '#c3c2b7',
-                surface: '#1a1a19',
-                border: '#2c2c2a'
-            }
+<script>
+    // Google Sheets API Configuration
+    const SHEET_ID = '1uxO-ts_rXN7L1RzYoyR9a5kS4Zg4nlw6Y7fpjHgf64s';
+    const SHEET_NAME = 'Trading Tracker 2026';
+    const API_KEY = 'AIzaSyAgjMO5AuHgSpCGAoDnoWR1vixvazSDaiA';
+    const SHEETS_API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+
+    let currentTheme = 'light';
+    let dashboardData = null;
+    let charts = {};
+
+    function toggleTheme() {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('theme', currentTheme);
+        updateAllCharts();
+        document.querySelector('.theme-toggle').textContent = currentTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+    }
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        currentTheme = savedTheme;
+        document.body.setAttribute('data-theme', currentTheme);
+        document.querySelector('.theme-toggle').textContent = currentTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
+    }
+
+    function getColors() {
+        return currentTheme === 'light' ? {
+            primary: '#0066cc',
+            secondary: '#ff6b35',
+            success: '#00b341',
+            warning: '#ffa500',
+            danger: '#e63946',
+            info: '#4ecdc4',
+            light: '#f5f5f3',
+            dark: '#0b0b0b'
+        } : {
+            primary: '#4da6ff',
+            secondary: '#ff8860',
+            success: '#33dd33',
+            warning: '#ffb84d',
+            danger: '#ff6b7a',
+            info: '#66e5e0',
+            light: '#1e1e1e',
+            dark: '#ffffff'
         };
+    }
 
-        let currentTheme = 'light';
-        let dashboardData = null;
-        let charts = {};
+    async function fetchLiveData() {
+        try {
+            document.getElementById('syncStatus').textContent = 'Syncing...';
 
-        // Google Sheets API Configuration
-        const SHEET_ID = '1uxO-ts_rXN7L1RzYoyR9a5kS4Zg4nlw6Y7fpjHgf64s';
-        const SHEET_NAME = 'Trading Tracker 2026';
-        const API_KEY = 'AIzaSyAgjMO5AuHgSpCGAoDnoWR1vixvazSDaiA';
-        const SHEETS_API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
+            const response = await fetch(SHEETS_API_URL);
+            const sheetsData = await response.json();
 
-        function getColors() {
-            return colors[currentTheme];
-        }
-
-        function toggleTheme() {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            document.body.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('theme', currentTheme);
-            updateAllCharts();
-            document.querySelector('.theme-toggle').textContent = currentTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
-        }
-
-        // Check for saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            currentTheme = savedTheme;
-            document.body.setAttribute('data-theme', currentTheme);
-            document.querySelector('.theme-toggle').textContent = currentTheme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode';
-        }
-
-        async function fetchLiveData() {
-            try {
-                document.getElementById('syncStatus').textContent = 'Syncing...';
-
-                // Fetch data from Google Sheets API
-                const response = await fetch(SHEETS_API_URL);
-                const sheetsData = await response.json();
-
-                if (sheetsData.error) {
-                    showError('Error fetching data: ' + sheetsData.error.message);
-                    return;
-                }
-
-                // Parse the raw sheet data
-                if (!sheetsData.values || sheetsData.values.length < 2) {
-                    showError('No data found in spreadsheet');
-                    return;
-                }
-
-                const headers = sheetsData.values[0];
-                const trades = [];
-
-                // Convert rows to trade objects
-                for (let i = 1; i < sheetsData.values.length; i++) {
-                    const row = sheetsData.values[i];
-                    const trade = {};
-                    headers.forEach((header, index) => {
-                        trade[header.trim()] = row[index] ? row[index].toString().trim() : '';
-                    });
-                    if (trade['STS Lessor'] || trade['Airline']) {
-                        trades.push(trade);
-                    }
-                }
-
-                // Analyze data
-                dashboardData = analyzeTradeData(trades);
-                renderDashboard();
-                updateSyncStatus();
-            } catch (error) {
-                showError('Failed to fetch data: ' + error.message);
-                console.error('Data fetch error:', error);
+            if (sheetsData.error) {
+                showError('Error fetching data: ' + sheetsData.error.message);
+                return;
             }
-        }
 
-        function analyzeTradeData(trades) {
-            // Filter out invalid trades
-            const validTrades = trades.filter(t =>
-                (t['STS Lessor'] || t['Lessor B']) &&
-                (t['A/C Type'] || t['Airline'])
-            );
+            if (!sheetsData.values || sheetsData.values.length < 2) {
+                showError('No data found in spreadsheet');
+                return;
+            }
 
-            const totalTrades = validTrades.length;
+            const headers = sheetsData.values[0];
+            const trades = [];
 
-            // STS Lessors
-            const stsLessorCounts = {};
-            validTrades.forEach(trade => {
-                const lessor = trade['STS Lessor'] || 'Unknown';
-                if (lessor && lessor !== 'Unknown' && lessor !== '') {
-                    stsLessorCounts[lessor] = (stsLessorCounts[lessor] || 0) + 1;
-                }
-            });
-            const stsLessorsTop = Object.entries(stsLessorCounts)
-                .map(([name, count]) => ({ name, count }))
-                .sort((a, b) => b.count - a.count);
-
-            // Opposite Lessors
-            const oppositeLessorCounts = {};
-            validTrades.forEach(trade => {
-                const lessor = trade['Lessor B'] || 'Unknown';
-                if (lessor && lessor !== 'Unknown' && lessor !== '') {
-                    oppositeLessorCounts[lessor] = (oppositeLessorCounts[lessor] || 0) + 1;
-                }
-            });
-            const oppositeTop = Object.entries(oppositeLessorCounts)
-                .map(([name, count]) => ({ name, count }))
-                .sort((a, b) => b.count - a.count);
-
-            // Aircraft Types
-            const aircraftCounts = {};
-            validTrades.forEach(trade => {
-                const aircraft = trade['A/C Type'] || 'Unknown';
-                if (aircraft && aircraft !== '' && aircraft !== 'Unknown') {
-                    aircraftCounts[aircraft] = (aircraftCounts[aircraft] || 0) + 1;
-                }
-            });
-            const aircraftTypes = Object.entries(aircraftCounts)
-                .map(([name, count]) => ({ name, count }))
-                .sort((a, b) => b.count - a.count);
-
-            // Engine Types
-            const engineCounts = {};
-            validTrades.forEach(trade => {
-                const engine = trade['Engine Type'] || 'Unknown';
-                if (engine && engine !== '' && engine !== 'Unknown') {
-                    engineCounts[engine] = (engineCounts[engine] || 0) + 1;
-                }
-            });
-            const engineTypes = Object.entries(engineCounts)
-                .map(([name, count]) => ({ name, count }))
-                .sort((a, b) => b.count - a.count);
-
-            // Aircraft Age
-            const ages = [];
-            validTrades.forEach(trade => {
-                const ageStr = trade['Age'] || '';
-                if (ageStr !== '') {
-                    const age = parseFloat(ageStr);
-                    if (!isNaN(age)) {
-                        ages.push(age);
-                    }
-                }
-            });
-            const avgAge = ages.length > 0 ? ages.reduce((a, b) => a + b) / ages.length : 0;
-            const medianAge = ages.length > 0 ? getMedian(ages) : 0;
-            const minAge = ages.length > 0 ? Math.min(...ages) : 0;
-            const maxAge = ages.length > 0 ? Math.max(...ages) : 0;
-
-            // Project Status
-            const statusCounts = {};
-            validTrades.forEach(trade => {
-                const status = trade['Project Status'] || 'Unknown';
-                if (status && status !== '' && status !== 'Project Status') {
-                    statusCounts[status] = (statusCounts[status] || 0) + 1;
-                }
-            });
-            const projectStatus = Object.entries(statusCounts)
-                .map(([name, count]) => ({ name, count }))
-                .sort((a, b) => b.count - a.count);
-
-            // Trade Types
-            const typeCounts = {};
-            validTrades.forEach(trade => {
-                const type = trade['Type'] || 'Unknown';
-                if (type && type !== '' && type !== 'Type') {
-                    typeCounts[type] = (typeCounts[type] || 0) + 1;
-                }
-            });
-            const tradeTypes = Object.entries(typeCounts)
-                .map(([name, count]) => ({ name, count }))
-                .sort((a, b) => b.count - a.count);
-
-            // Active projects
-            const activeStatuses = ['Upcoming', 'In Progress', 'Report Submitted - Awaiting Acceptance'];
-            const activeProjects = validTrades.filter(t => {
-                const status = t['Project Status'] || '';
-                return activeStatuses.some(s => status.includes(s));
-            }).length;
-
-            const uniqueLessors = stsLessorsTop.length;
-            const topEngine = engineTypes.length > 0 ? engineTypes[0] : { name: 'N/A', count: 0 };
-            const topAircraft = aircraftTypes.length > 0 ? aircraftTypes[0] : { name: 'N/A', count: 0 };
-
-            return {
-                totalTrades,
-                uniqueLessors,
-                avgAge: parseFloat(avgAge.toFixed(1)),
-                medianAge,
-                minAge,
-                maxAge,
-                activeProjects,
-                topEngine,
-                topAircraft,
-                stsLessorsTop,
-                oppositeTop,
-                aircraftTypes,
-                engineTypes,
-                projectStatus,
-                tradeTypes,
-                lastUpdated: new Date().toISOString()
-            };
-        }
-
-        function getMedian(arr) {
-            const sorted = arr.sort((a, b) => a - b);
-            const mid = Math.floor(sorted.length / 2);
-            return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
-        }
-
-        function showError(message) {
-            const errorEl = document.getElementById('errorMessage');
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
-
-        function updateSyncStatus() {
-            const now = new Date();
-            document.getElementById('syncStatus').textContent = `Last synced: ${now.toLocaleTimeString()}`;
-        }
-
-        function renderDashboard() {
-            if (!dashboardData) return;
-
-            const html = `
-                <!-- Key Metrics -->
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Trades</div>
-                        <div class="stat-value">${dashboardData.totalTrades}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Unique Lessors</div>
-                        <div class="stat-value">${dashboardData.uniqueLessors}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Avg Aircraft Age</div>
-                        <div class="stat-value">${dashboardData.avgAge.toFixed(1)} yrs</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Active Projects</div>
-                        <div class="stat-value">${dashboardData.activeProjects}</div>
-                    </div>
-                </div>
-
-                <!-- Charts Grid -->
-                <div class="charts-grid">
-                    <!-- STS Lessor Distribution -->
-                    <div class="chart-container">
-                        <div class="chart-title">Top STS Lessors (Our Partners)</div>
-                        <div class="chart-wrapper">
-                            <canvas id="stsLessorsChart"></canvas>
-                        </div>
-                        <div class="color-legend" id="stsLessorsLegend"></div>
-                    </div>
-
-                    <!-- Opposite Side Lessors -->
-                    <div class="chart-container">
-                        <div class="chart-title">Top Opposite Lessors (Counter Parties)</div>
-                        <div class="chart-wrapper">
-                            <canvas id="oppositeLessorsChart"></canvas>
-                        </div>
-                        <div class="color-legend" id="oppositeLessorsLegend"></div>
-                    </div>
-
-                    <!-- Aircraft Type Distribution -->
-                    <div class="chart-container">
-                        <div class="chart-title">Aircraft Type Distribution</div>
-                        <div class="chart-wrapper">
-                            <canvas id="aircraftTypesChart"></canvas>
-                        </div>
-                        <div class="color-legend" id="aircraftLegend"></div>
-                    </div>
-
-                    <!-- Engine Type Distribution -->
-                    <div class="chart-container">
-                        <div class="chart-title">Engine Type Distribution</div>
-                        <div class="chart-wrapper">
-                            <canvas id="engineTypesChart"></canvas>
-                        </div>
-                        <div class="color-legend" id="engineLegend"></div>
-                    </div>
-
-                    <!-- Project Status -->
-                    <div class="chart-container">
-                        <div class="chart-title">Project Status Breakdown</div>
-                        <div class="chart-wrapper">
-                            <canvas id="projectStatusChart"></canvas>
-                        </div>
-                        <div class="color-legend" id="statusLegend"></div>
-                    </div>
-
-                    <!-- Trade Type -->
-                    <div class="chart-container">
-                        <div class="chart-title">Trade Type Distribution</div>
-                        <div class="chart-wrapper">
-                            <canvas id="tradeTypeChart"></canvas>
-                        </div>
-                        <div class="color-legend" id="typeLegend"></div>
-                    </div>
-                </div>
-
-                <!-- Data Tables -->
-                <div class="data-table">
-                    <h3>Lessor Rankings</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>STS Lessor</th>
-                                <th>Number of Trades</th>
-                                <th>Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${dashboardData.stsLessorsTop.slice(0, 5).map((item, i) => `
-                                <tr>
-                                    <td>${i + 1}</td>
-                                    <td><strong>${item.name}</strong></td>
-                                    <td>${item.count}</td>
-                                    <td>${((item.count / dashboardData.totalTrades) * 100).toFixed(1)}%</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="data-table">
-                    <h3>Counter Party Rankings</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Opposite Lessor</th>
-                                <th>Number of Trades</th>
-                                <th>Percentage</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${dashboardData.oppositeTop.slice(0, 5).map((item, i) => `
-                                <tr>
-                                    <td>${i + 1}</td>
-                                    <td><strong>${item.name}</strong></td>
-                                    <td>${item.count}</td>
-                                    <td>${((item.count / dashboardData.totalTrades) * 100).toFixed(1)}%</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="data-table">
-                    <h3>Aircraft Age & Engine Summary</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Metric</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Average Aircraft Age</td>
-                                <td><strong>${dashboardData.avgAge.toFixed(2)} years</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Median Aircraft Age</td>
-                                <td><strong>${dashboardData.medianAge.toFixed(2)} years</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Youngest Aircraft</td>
-                                <td><strong>${dashboardData.minAge.toFixed(1)} years</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Oldest Aircraft</td>
-                                <td><strong>${dashboardData.maxAge.toFixed(1)} years</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Most Common Engine</td>
-                                <td><strong>${dashboardData.topEngine.name} (${dashboardData.topEngine.count} aircraft)</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Most Common Aircraft</td>
-                                <td><strong>${dashboardData.topAircraft.name} (${dashboardData.topAircraft.count} aircraft)</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="last-updated">
-                    Data synced from Google Sheet • Last updated: <span id="lastUpdate"></span>
-                </div>
-            `;
-
-            document.getElementById('content').innerHTML = html;
-            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            createAllCharts();
-        }
-
-        const chartConfig = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                    padding: 12,
-                    borderRadius: 6,
-                    titleFont: { size: 13, weight: 'bold' },
-                    bodyFont: { size: 12 }
+            for (let i = 1; i < sheetsData.values.length; i++) {
+                const row = sheetsData.values[i];
+                const trade = {};
+                headers.forEach((header, index) => {
+                    trade[header.trim()] = row[index] ? row[index].toString().trim() : '';
+                });
+                if (trade['STS Lessor'] || trade['Airline']) {
+                    trades.push(trade);
                 }
             }
-        };
 
-        function createAllCharts() {
-            if (!dashboardData) return;
-
-            createBarChart('stsLessorsChart', 'STS Lessors', dashboardData.stsLessorsTop.slice(0, 8), 'stsLessorsLegend');
-            createBarChart('oppositeLessorsChart', 'Opposite Lessors', dashboardData.oppositeTop.slice(0, 8), 'oppositeLessorsLegend');
-            createPieChart('aircraftTypesChart', 'Aircraft Types', dashboardData.aircraftTypes, 'aircraftLegend');
-            createBarChart('engineTypesChart', 'Engine Types', dashboardData.engineTypes.slice(0, 8), 'engineLegend');
-            createPieChart('projectStatusChart', 'Project Status', dashboardData.projectStatus, 'statusLegend');
-            createPieChart('tradeTypeChart', 'Trade Types', dashboardData.tradeTypes, 'typeLegend');
+            dashboardData = analyzeTradeData(trades);
+            renderDashboard();
+            updateSyncStatus();
+        } catch (error) {
+            showError('Failed to fetch data: ' + error.message);
+            console.error('Data fetch error:', error);
         }
+    }
 
-        function createBarChart(canvasId, title, data, legendId) {
-            const ctx = document.getElementById(canvasId);
-            if (!ctx) return;
+    function analyzeTradeData(trades) {
+        const validTrades = trades.filter(t =>
+            (t['STS Lessor'] || t['Lessor B']) &&
+            (t['A/C Type'] || t['Airline'])
+        );
 
-            const labels = data.map(item => item.name);
-            const values = data.map(item => item.count);
-            const colorArr = [colors.light.series1, colors.light.series2, colors.light.series3, colors.light.series4, colors.light.series5, colors.light.series6, colors.light.series7, colors.light.series8].slice(0, data.length);
+        const totalTrades = validTrades.length;
 
-            charts[canvasId] = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Count',
-                        data: values,
-                        backgroundColor: colorArr,
-                        borderRadius: 4,
-                        borderSkipped: false
-                    }]
-                },
-                options: {
-                    ...chartConfig,
-                    indexAxis: 'y',
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            grid: { color: getColors().border, drawBorder: false },
-                            ticks: { color: getColors().textSecondary, font: { size: 11 } }
-                        },
-                        y: {
-                            grid: { display: false },
-                            ticks: { color: getColors().textSecondary, font: { size: 11 } }
-                        }
-                    }
-                }
-            });
-
-            createLegend(legendId, labels, colorArr);
-        }
-
-        function createPieChart(canvasId, title, data, legendId) {
-            const ctx = document.getElementById(canvasId);
-            if (!ctx) return;
-
-            const labels = data.map(item => item.name);
-            const values = data.map(item => item.count);
-            const colorArr = [colors.light.series1, colors.light.series2, colors.light.series3, colors.light.series4, colors.light.series5, colors.light.series6, colors.light.series7, colors.light.series8].slice(0, data.length);
-
-            charts[canvasId] = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: values,
-                        backgroundColor: colorArr,
-                        borderColor: getColors().surface,
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    ...chartConfig,
-                    plugins: {
-                        ...chartConfig.plugins,
-                        tooltip: {
-                            ...chartConfig.plugins.tooltip,
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.parsed || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            createLegend(legendId, labels, colorArr);
-        }
-
-        function createLegend(elementId, labels, colorArr) {
-            const container = document.getElementById(elementId);
-            if (!container) return;
-            container.innerHTML = labels.map((label, i) => `
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: ${colorArr[i]}"></div>
-                    <span>${label}</span>
-                </div>
-            `).join('');
-        }
-
-        function updateAllCharts() {
-            Object.values(charts).forEach(chart => {
-                if (chart) chart.update();
-            });
-        }
-
-        // Fetch data on load and set up auto-refresh
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchLiveData();
-            // Refresh every 5 minutes
-            setInterval(fetchLiveData, 5 * 60 * 1000);
+        const stsLessorCounts = {};
+        validTrades.forEach(trade => {
+            const lessor = trade['STS Lessor'] || 'Unknown';
+            if (lessor && lessor !== 'Unknown' && lessor !== '') {
+                stsLessorCounts[lessor] = (stsLessorCounts[lessor] || 0) + 1;
+            }
         });
-    </script>
+        const stsLessorsTop = Object.entries(stsLessorCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        const oppositeLessorCounts = {};
+        validTrades.forEach(trade => {
+            const lessor = trade['Lessor B'] || 'Unknown';
+            if (lessor && lessor !== 'Unknown' && lessor !== '') {
+                oppositeLessorCounts[lessor] = (oppositeLessorCounts[lessor] || 0) + 1;
+            }
+        });
+        const oppositeTop = Object.entries(oppositeLessorCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        const aircraftCounts = {};
+        validTrades.forEach(trade => {
+            const aircraft = trade['A/C Type'] || 'Unknown';
+            if (aircraft && aircraft !== '' && aircraft !== 'Unknown') {
+                aircraftCounts[aircraft] = (aircraftCounts[aircraft] || 0) + 1;
+            }
+        });
+        const aircraftTypes = Object.entries(aircraftCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        const engineCounts = {};
+        validTrades.forEach(trade => {
+            const engine = trade['Engine Type'] || 'Unknown';
+            if (engine && engine !== '' && engine !== 'Unknown') {
+                engineCounts[engine] = (engineCounts[engine] || 0) + 1;
+            }
+        });
+        const engineTypes = Object.entries(engineCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        const ages = [];
+        validTrades.forEach(trade => {
+            const ageStr = trade['Age'] || '';
+            if (ageStr !== '') {
+                const age = parseFloat(ageStr);
+                if (!isNaN(age)) {
+                    ages.push(age);
+                }
+            }
+        });
+        const avgAge = ages.length > 0 ? ages.reduce((a, b) => a + b) / ages.length : 0;
+        const medianAge = ages.length > 0 ? getMedian(ages) : 0;
+        const minAge = ages.length > 0 ? Math.min(...ages) : 0;
+        const maxAge = ages.length > 0 ? Math.max(...ages) : 0;
+
+        const statusCounts = {};
+        validTrades.forEach(trade => {
+            const status = trade['Project Status'] || 'Unknown';
+            if (status && status !== '' && status !== 'Project Status') {
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            }
+        });
+        const projectStatus = Object.entries(statusCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        const typeCounts = {};
+        validTrades.forEach(trade => {
+            const type = trade['Type'] || 'Unknown';
+            if (type && type !== '' && type !== 'Type') {
+                typeCounts[type] = (typeCounts[type] || 0) + 1;
+            }
+        });
+        const tradeTypes = Object.entries(typeCounts)
+            .map(([name, count]) => ({ name, count }))
+            .sort((a, b) => b.count - a.count);
+
+        const activeStatuses = ['Upcoming', 'In Progress', 'Report Submitted - Awaiting Acceptance'];
+        const activeProjects = validTrades.filter(t => {
+            const status = t['Project Status'] || '';
+            return activeStatuses.some(s => status.includes(s));
+        }).length;
+
+        const uniqueLessors = stsLessorsTop.length;
+        const topEngine = engineTypes.length > 0 ? engineTypes[0] : { name: 'N/A', count: 0 };
+        const topAircraft = aircraftTypes.length > 0 ? aircraftTypes[0] : { name: 'N/A', count: 0 };
+
+        return {
+            totalTrades,
+            uniqueLessors,
+            avgAge: parseFloat(avgAge.toFixed(1)),
+            medianAge: parseFloat(medianAge.toFixed(1)),
+            minAge,
+            maxAge,
+            activeProjects,
+            topEngine,
+            topAircraft,
+            stsLessorsTop,
+            oppositeTop,
+            aircraftTypes,
+            engineTypes,
+            projectStatus,
+            tradeTypes,
+            lastUpdated: new Date().toISOString()
+        };
+    }
+
+    function getMedian(arr) {
+        const sorted = arr.sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+    }
+
+    function renderDashboard() {
+        if (!dashboardData) return;
+
+        document.getElementById('totalTrades').textContent = dashboardData.totalTrades;
+        document.getElementById('uniqueLessors').textContent = dashboardData.uniqueLessors;
+        document.getElementById('avgAge').textContent = dashboardData.avgAge;
+        document.getElementById('activeProjects').textContent = dashboardData.activeProjects;
+
+        document.getElementById('summaryAvgAge').textContent = dashboardData.avgAge + ' yrs';
+        document.getElementById('summaryMedianAge').textContent = dashboardData.medianAge + ' yrs';
+        document.getElementById('summaryMinAge').textContent = dashboardData.minAge + ' yrs';
+        document.getElementById('summaryMaxAge').textContent = dashboardData.maxAge + ' yrs';
+        document.getElementById('summaryTopEngine').textContent = dashboardData.topEngine.name;
+        document.getElementById('summaryTopAircraft').textContent = dashboardData.topAircraft.name;
+
+        renderLessorTable();
+        renderCounterPartyTable();
+        renderCharts();
+    }
+
+    function renderLessorTable() {
+        const tbody = document.getElementById('lessorTable');
+        tbody.innerHTML = '';
+        dashboardData.stsLessorsTop.slice(0, 5).forEach((lessor, index) => {
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><strong>${lessor.name}</strong></td>
+                    <td>${lessor.count}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function renderCounterPartyTable() {
+        const tbody = document.getElementById('counterPartyTable');
+        tbody.innerHTML = '';
+        dashboardData.oppositeTop.slice(0, 5).forEach((lessor, index) => {
+            const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><strong>${lessor.name}</strong></td>
+                    <td>${lessor.count}</td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    function renderCharts() {
+        const colors = getColors();
+        const chartColors = [
+            colors.primary, colors.secondary, colors.success, colors.warning,
+            colors.danger, colors.info, '#9c27b0', '#ff9800'
+        ];
+
+        renderAircraftTypeChart(chartColors, colors);
+        renderEngineTypeChart(chartColors, colors);
+    }
+
+    function renderAircraftTypeChart(chartColors, colors) {
+        const ctx = document.getElementById('aircraftTypeChart').getContext('2d');
+
+        if (charts.aircraftType) charts.aircraftType.destroy();
+
+        charts.aircraftType = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: dashboardData.aircraftTypes.map(a => a.name),
+                datasets: [{
+                    data: dashboardData.aircraftTypes.map(a => a.count),
+                    backgroundColor: chartColors.slice(0, dashboardData.aircraftTypes.length),
+                    borderColor: currentTheme === 'light' ? '#ffffff' : '#1e1e1e',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 11 }, color: colors.dark, padding: 12 }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderEngineTypeChart(chartColors, colors) {
+        const ctx = document.getElementById('engineTypeChart').getContext('2d');
+
+        if (charts.engineType) charts.engineType.destroy();
+
+        charts.engineType = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: dashboardData.engineTypes.map(e => e.name),
+                datasets: [{
+                    label: 'Count',
+                    data: dashboardData.engineTypes.map(e => e.count),
+                    backgroundColor: colors.primary,
+                    borderRadius: 6,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { color: currentTheme === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    function updateAllCharts() {
+        if (dashboardData) {
+            renderCharts();
+        }
+    }
+
+    function showError(message) {
+        const errorEl = document.getElementById('errorMessage');
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+    }
+
+    function updateSyncStatus() {
+        const now = new Date();
+        const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('syncStatus').textContent = `Last synced: ${time}`;
+    }
+
+    fetchLiveData();
+    setInterval(fetchLiveData, 5 * 60 * 1000);
+</script>
 </body>
 </html>
