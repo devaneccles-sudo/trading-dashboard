@@ -417,9 +417,11 @@
         let dashboardData = null;
         let charts = {};
 
-        // IMPORTANT: Replace this with your actual Google Apps Script deployment URL
-        // Instructions to get this URL are provided below
-        const SCRIPT_URL = 'https://script.google.com/a/macros/shannontechnicalservices.com/s/AKfycbzljW5buI2NiaeaubjqnAiqOARawrw0a2sthcDVLfqLDhdm7fEBY3xE4SlpaC_YOZXg/exec';
+        // Google Sheets API Configuration
+        const SHEET_ID = '1uxO-ts_rXN7L1RzYoyR9a5kS4Zg4nlw6Y7fpjHgf64s';
+        const SHEET_NAME = 'Trading Tracker 2026';
+        const API_KEY = 'AIzaSyAgjMO5AuHgSpCGAoDnoWR1vixvazSDaiA';
+        const SHEETS_API_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`;
 
         function getColors() {
             return colors[currentTheme];
@@ -445,28 +447,178 @@
             try {
                 document.getElementById('syncStatus').textContent = 'Syncing...';
 
-                // Check if script URL is configured
-                if (SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                    showError('Dashboard not yet configured. Please add your Google Apps Script URL.');
-                    document.getElementById('content').innerHTML = '';
+                // Fetch data from Google Sheets API
+                const response = await fetch(SHEETS_API_URL);
+                const sheetsData = await response.json();
+
+                if (sheetsData.error) {
+                    showError('Error fetching data: ' + sheetsData.error.message);
                     return;
                 }
 
-                const response = await fetch(SCRIPT_URL);
-                const data = await response.json();
-
-                if (data.error) {
-                    showError('Error fetching data: ' + data.error);
+                // Parse the raw sheet data
+                if (!sheetsData.values || sheetsData.values.length < 2) {
+                    showError('No data found in spreadsheet');
                     return;
                 }
 
-                dashboardData = data;
+                const headers = sheetsData.values[0];
+                const trades = [];
+
+                // Convert rows to trade objects
+                for (let i = 1; i < sheetsData.values.length; i++) {
+                    const row = sheetsData.values[i];
+                    const trade = {};
+                    headers.forEach((header, index) => {
+                        trade[header.trim()] = row[index] ? row[index].toString().trim() : '';
+                    });
+                    if (trade['STS Lessor'] || trade['Airline']) {
+                        trades.push(trade);
+                    }
+                }
+
+                // Analyze data
+                dashboardData = analyzeTradeData(trades);
                 renderDashboard();
                 updateSyncStatus();
             } catch (error) {
                 showError('Failed to fetch data: ' + error.message);
                 console.error('Data fetch error:', error);
             }
+        }
+
+        function analyzeTradeData(trades) {
+            // Filter out invalid trades
+            const validTrades = trades.filter(t =>
+                (t['STS Lessor'] || t['Lessor B']) &&
+                (t['A/C Type'] || t['Airline'])
+            );
+
+            const totalTrades = validTrades.length;
+
+            // STS Lessors
+            const stsLessorCounts = {};
+            validTrades.forEach(trade => {
+                const lessor = trade['STS Lessor'] || 'Unknown';
+                if (lessor && lessor !== 'Unknown' && lessor !== '') {
+                    stsLessorCounts[lessor] = (stsLessorCounts[lessor] || 0) + 1;
+                }
+            });
+            const stsLessorsTop = Object.entries(stsLessorCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
+
+            // Opposite Lessors
+            const oppositeLessorCounts = {};
+            validTrades.forEach(trade => {
+                const lessor = trade['Lessor B'] || 'Unknown';
+                if (lessor && lessor !== 'Unknown' && lessor !== '') {
+                    oppositeLessorCounts[lessor] = (oppositeLessorCounts[lessor] || 0) + 1;
+                }
+            });
+            const oppositeTop = Object.entries(oppositeLessorCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
+
+            // Aircraft Types
+            const aircraftCounts = {};
+            validTrades.forEach(trade => {
+                const aircraft = trade['A/C Type'] || 'Unknown';
+                if (aircraft && aircraft !== '' && aircraft !== 'Unknown') {
+                    aircraftCounts[aircraft] = (aircraftCounts[aircraft] || 0) + 1;
+                }
+            });
+            const aircraftTypes = Object.entries(aircraftCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
+
+            // Engine Types
+            const engineCounts = {};
+            validTrades.forEach(trade => {
+                const engine = trade['Engine Type'] || 'Unknown';
+                if (engine && engine !== '' && engine !== 'Unknown') {
+                    engineCounts[engine] = (engineCounts[engine] || 0) + 1;
+                }
+            });
+            const engineTypes = Object.entries(engineCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
+
+            // Aircraft Age
+            const ages = [];
+            validTrades.forEach(trade => {
+                const ageStr = trade['Age'] || '';
+                if (ageStr !== '') {
+                    const age = parseFloat(ageStr);
+                    if (!isNaN(age)) {
+                        ages.push(age);
+                    }
+                }
+            });
+            const avgAge = ages.length > 0 ? ages.reduce((a, b) => a + b) / ages.length : 0;
+            const medianAge = ages.length > 0 ? getMedian(ages) : 0;
+            const minAge = ages.length > 0 ? Math.min(...ages) : 0;
+            const maxAge = ages.length > 0 ? Math.max(...ages) : 0;
+
+            // Project Status
+            const statusCounts = {};
+            validTrades.forEach(trade => {
+                const status = trade['Project Status'] || 'Unknown';
+                if (status && status !== '' && status !== 'Project Status') {
+                    statusCounts[status] = (statusCounts[status] || 0) + 1;
+                }
+            });
+            const projectStatus = Object.entries(statusCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
+
+            // Trade Types
+            const typeCounts = {};
+            validTrades.forEach(trade => {
+                const type = trade['Type'] || 'Unknown';
+                if (type && type !== '' && type !== 'Type') {
+                    typeCounts[type] = (typeCounts[type] || 0) + 1;
+                }
+            });
+            const tradeTypes = Object.entries(typeCounts)
+                .map(([name, count]) => ({ name, count }))
+                .sort((a, b) => b.count - a.count);
+
+            // Active projects
+            const activeStatuses = ['Upcoming', 'In Progress', 'Report Submitted - Awaiting Acceptance'];
+            const activeProjects = validTrades.filter(t => {
+                const status = t['Project Status'] || '';
+                return activeStatuses.some(s => status.includes(s));
+            }).length;
+
+            const uniqueLessors = stsLessorsTop.length;
+            const topEngine = engineTypes.length > 0 ? engineTypes[0] : { name: 'N/A', count: 0 };
+            const topAircraft = aircraftTypes.length > 0 ? aircraftTypes[0] : { name: 'N/A', count: 0 };
+
+            return {
+                totalTrades,
+                uniqueLessors,
+                avgAge: parseFloat(avgAge.toFixed(1)),
+                medianAge,
+                minAge,
+                maxAge,
+                activeProjects,
+                topEngine,
+                topAircraft,
+                stsLessorsTop,
+                oppositeTop,
+                aircraftTypes,
+                engineTypes,
+                projectStatus,
+                tradeTypes,
+                lastUpdated: new Date().toISOString()
+            };
+        }
+
+        function getMedian(arr) {
+            const sorted = arr.sort((a, b) => a - b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
         }
 
         function showError(message) {
